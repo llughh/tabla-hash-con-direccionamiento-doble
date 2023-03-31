@@ -1,19 +1,46 @@
-//
-// class Celda
-// author: Vicente David Mut and Juan Carlos Sanchez
-// date: 24/03/2023
-//
-public class Hash {
+/*
+ - Practica: Implementacion de una tabla Hash
+ - Grupo de TPA: P1-M21 7
+ - Equipo de Trabajo: Vicente David Mut and Juan Carlos Sánchez
+ - Expedientes: Vicente David Mut: 22083342   //   Juan Carlos Sánchez: 22064532
+ - Fecha de creación: 24/03/2023
+ - Fecha ultima de modificación: 31/3/2023
+ - Version: 1
+*/
+public class Hash <Valor> {
+
+    private Celda<Valor>[] contenedor;
+
+    private int numElementos;
+
+    private float alfaMax;
+
     public static void main(String[] args) {
     }
-    public void insertar(int numeroInsertar){
+
+    public Hash() {
+        /*
+        this.contenedor = (Celda<Valor>[]) new Celda[10]; // ejemplo de tamaño inicial 10
+        this.numElementos = 0;
+        this.alfaMax = alfaMax;*/
+    }
+
+    public Hash(int capacidad){
 
     }
+
+    public Hash(int capacidad, float alfaMax){
+
+    }
+
+    public void insertar(int numeroInsertar, Valor v){
+    }
+
     public boolean borrar(int claveBorrar){
         return true;
     }
-    public void get(){
-
+    public Valor get(int clave){
+        return null;
     }
     public boolean esVacia(){
         return true;
@@ -21,8 +48,8 @@ public class Hash {
     public float getAlfaMax(){
         return 0;
     }
-    public void setAlfaMax(){
-
+    public float setAlfaMax(){
+        return 0;
     }
     public int getNumElementos(){
         return 0;
@@ -36,10 +63,10 @@ public class Hash {
     private int funcionHash(){
         return 0;
     }
-    private int hash(){
+    private int hash1(int clave){
         return 0;
     }
-    private int hash2(){
+    private int hash2(int clave, int colisiones){
         return 0;
     }
     private void redimensionar(){
