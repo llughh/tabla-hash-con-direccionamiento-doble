@@ -95,4 +95,3 @@ public class Celda <Valor> {
         return true;
     }
 }
-
