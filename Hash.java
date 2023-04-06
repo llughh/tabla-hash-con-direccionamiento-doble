@@ -26,10 +26,14 @@ public class Hash <Valor> {
     }
 
     public Hash() {
-        /*
-        this.contenedor = (Celda<Valor>[]) new Celda[10]; // ejemplo de tamaño inicial 10
-        this.numElementos = 0;
-        this.alfaMax = alfaMax;*/
+        capacidad = 7;
+        tabla = new Celda[capacidad];
+        for (int i = 0; i < capacidad; i++) {
+            tabla[i] = new Celda();
+        }
+        alfaMax = 0.8;
+        numElementos = 0;
+
     }
 
     /**
@@ -46,7 +50,12 @@ public class Hash <Valor> {
      * @param alfaMax: Factor de carga Max permitido para la tabla hash.
      */
     public Hash(int capacidad, float alfaMax){
-
+        this.capacidad = capacidad;
+        tabla = new Celda[capacidad];
+        for (int i = 0; i < capacidad; i++) {
+            tabla[i] = new Celda();
+        }
+        alfaMax.setAlfaMax();
     }
 
     /**
@@ -158,16 +167,28 @@ public class Hash <Valor> {
      * Determina si un número es primo o no
      * @return true si el número es primo, false si no
      */
-    private boolean esPrimo(){
+    private boolean esPrimo(int n){
+        if (n <= 1) {
+            return false;
+        }
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
         return true;
     }
 
     /**
-     * Devuelve el siguiente número primo más grande que un número dado
+     * Devuelve el siguiente número primo más grande que el número dado
      * @return nuevo numero primo
      */
-    private int siguientePrimo(){
-        return 0;
+    private int siguientePrimo(int n){
+        int siguiente = n + 1;
+        while (!esPrimo(siguiente)) {
+            siguiente++;
+        }
+        return siguiente;
     }
 
     /**

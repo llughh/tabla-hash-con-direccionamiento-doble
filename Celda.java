@@ -30,6 +30,9 @@ public class Celda <Valor> {
     public static void main(String[] args) {
     }
     public Celda(){
+        estado = 0;
+        clave = null;
+        valor = null;
     }
 
     /**
@@ -45,15 +48,16 @@ public class Celda <Valor> {
      * @param valorEstado Estado a establecer
      * @return true si se puede establecer el estado, false si no
      */
-    public boolean setEstado(int valorEstado){
-        return true;
+    public boolean setEstado(int estado){
+        this.estado = estado;
     }
 
     /**
      * Método para establecer la clave asociada con la celda
      * @param valorClave la clave que se va a asociar con la celda
      */
-    public void setClave(int valorClave){
+    public void setClave(int clave){
+        this.clave = clave;
     }
 
     /**
@@ -61,6 +65,7 @@ public class Celda <Valor> {
      * @param v el valor que se va a asociar con la clave
      */
     public void setValor(Valor v){
+        this.valor = valor;
     }
 
     /**
