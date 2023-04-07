@@ -21,10 +21,12 @@ public class Hash <Valor> {
      * Factor carga Max permitida en la tabla Hash
      */
     private float alfaMax;
+    /*no se si podemos declararla*/
+    private int capacidad;
 
-    public static void main(String[] args) {
-    }
-
+    /**
+     * Tabla predeterminada
+     */
     public Hash() {
         capacidad = 7;
         tabla = new Celda[capacidad];
@@ -51,11 +53,12 @@ public class Hash <Valor> {
      */
     public Hash(int capacidad, float alfaMax){
         this.capacidad = capacidad;
+        this.alfaMax = alfaMax;
+        this.numElementos = 0;
         tabla = new Celda[capacidad];
         for (int i = 0; i < capacidad; i++) {
             tabla[i] = new Celda();
         }
-        alfaMax.setAlfaMax();
     }
 
     /**
@@ -122,7 +125,7 @@ public class Hash <Valor> {
      * @return factor de carga de la tabla Hash
      */
     public float factorCarga(){
-        return 0;
+        return (float) numElementos / capacidad;
     }
 
     /**
@@ -160,6 +163,18 @@ public class Hash <Valor> {
      * Cambia el tamaño de la tabla de Hash
      */
     private void redimensionar(){
+        int capacidad2 = capacidad * 2;
+        cp = siguientePrimo(capacidad2);
+        Celda<Valor>[] tabla2 = new Celda[cp];
+
+        //insertamos elementos en la nueva tabla
+        for (int i = 0; i < capacidad; i++) {
+            if()
+            tabla[i] = new Celda();
+        }
+
+        capacidad = cp;
+        numElementos = 0;
 
     }
 

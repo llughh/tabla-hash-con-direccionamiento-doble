@@ -7,10 +7,10 @@
  - Fecha ultima de modificación: 31/3/2023
  - Version: 1
 */
-public class Celda <Valor> {
 //    H(clave, colisiones) = H1 (clave) + H2 (clave, colisiones)
 //    H1 (clave) = clave mod N
 //    H2 (clave, colisiones) = colisiones * (7 – (clave mod 7))
+public class Celda <Valor> {
 
     /**
      * clave asociada a la celda
@@ -27,12 +27,10 @@ public class Celda <Valor> {
      */
     private int estado;
 
-    public static void main(String[] args) {
-    }
     public Celda(){
-        estado = 0;
-        clave = null;
-        valor = null;
+        this.estado = 0;
+        this.clave = null;
+        this.valor = null;
     }
 
     /**
@@ -41,6 +39,8 @@ public class Celda <Valor> {
      * @param v El valor que se asocia con la clave
      */
     public Celda(int clave, Valor v){
+        this.clave = clave;
+        this.valor = valor;
     }
 
     /**
@@ -49,7 +49,9 @@ public class Celda <Valor> {
      * @return true si se puede establecer el estado, false si no
      */
     public boolean setEstado(int estado){
-        this.estado = estado;
+        if(estado == 1 || estado == -1 || estado == 0) {
+            this.estado = estado;
+        }
     }
 
     /**
@@ -73,7 +75,7 @@ public class Celda <Valor> {
      * @return estado actual de la celda
      */
     public int getEstado(){
-        return 0;
+        return estado;
     }
 
     /**
@@ -81,7 +83,7 @@ public class Celda <Valor> {
      * @return clave asociada con la celda
      */
     public int getClave(){
-        return 0;
+        return clave;
     }
 
     /**
@@ -89,15 +91,20 @@ public class Celda <Valor> {
      * @return el valor actual asociado con la clave en la celda.
      */
     public Valor getValor(){
-        return null;
+        return valor;
     }
 
     /**
      * Método que verifica si dos celdas son iguales.
-     * @return true si las dos celdas son iguales, false si no
+     * Si NO es una instancia de "Celda" devuelve false
+     *
      */
-    public boolean equals(){
-        return true;
+    public boolean equals(Object object){
+        if (object instanceof Celda<?>){
+            Celda celda = (Celda) object;
+            return this.clave == celda.clave && this.valor = celda.valor;
+        }
+        return false;
     }
 }
 
