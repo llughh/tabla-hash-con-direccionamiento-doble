@@ -7,7 +7,8 @@
  - Fecha ultima de modificación: 31/3/2023
  - Version: 1
 */
-public class Hash <Valor> {
+
+public class Hash<Valor> {
 
     /**
      * Array que contendra las celdas de la tabla Hash
@@ -21,7 +22,7 @@ public class Hash <Valor> {
      * Factor carga Max permitida en la tabla Hash
      */
     private float alfaMax;
-    /*no se si podemos declararla*/
+
     private int capacidad;
 
     /**
@@ -29,9 +30,9 @@ public class Hash <Valor> {
      */
     public Hash() {
         capacidad = 7;
-        tabla = new Celda[capacidad];
+        contenedor = new Celda[capacidad];
         for (int i = 0; i < capacidad; i++) {
-            tabla[i] = new Celda();
+            contenedor[i] = new Celda<Valor>();
         }
         alfaMax = 0.8;
         numElementos = 0;
@@ -43,6 +44,14 @@ public class Hash <Valor> {
      * @param capacidad: Tamaño inicial de la tabla hash
      */
     public Hash(int capacidad){
+        this.capacidad = capacidad;
+        contenedor = new Celda[capacidad];
+        for (int i = 0; i < capacidad; i++){
+            contenedor[i] = new Celda<Valor>();
+        }
+
+        alfaMax = 0.8;
+        numElementos = 0;
 
     }
 
@@ -54,10 +63,10 @@ public class Hash <Valor> {
     public Hash(int capacidad, float alfaMax){
         this.capacidad = capacidad;
         this.alfaMax = alfaMax;
-        this.numElementos = 0;
-        tabla = new Celda[capacidad];
+        numElementos = 0;
+        contenedor = new Celda[capacidad];
         for (int i = 0; i < capacidad; i++) {
-            tabla[i] = new Celda();
+            contenedor[i] = new Celda<Valor>();
         }
     }
 
@@ -67,16 +76,41 @@ public class Hash <Valor> {
      * @param v: valor a insertar
      */
     public void insertar(int clave, Valor v){
+        if(factorCarga() >= alfaMax){
+            redimensionar();
+        }
+        int h = hash1(clave); //calcula la posicion inicial de la celda
+        if(contenedor[h] == null){
+            contenedor[h] = new Celda<Valor>();
+        }
+        contenedor[h].setEstado(1);
+        contenedor[h].setClave(clave);
+        contenedor[h].setValor(v);
     }
+
 
     /**
      * Borra valor de la tabla Hash
-     * @param claveBorrar: clave del valor a eliminar
-     * @return true si se eliminó el valor, false en caso contrario
+     * @param clave: clave del valor a eliminar
+     * @return True si se eliminó el valor
+     * Si no se encuentra la celda con la clave clave o su estado no es 1, se devuelve false
      */
-    public boolean borrar(int claveBorrar){
-        return true;
+    public boolean borrar(int clave){
+        int i = 0;
+        int h;
+        do {
+            h = (hash1(clave) + i * hash2(clave, i)) % capacidad;
+            i++;
+        } while (contenedor[h] != null && (contenedor[h].getEstado() == 0 || contenedor[h].getClave() != clave) && i < capacidad);
+
+        if (contenedor[h] != null && contenedor[h].getClave() == clave && contenedor[h].getEstado() == 1) {
+            contenedor[h].setEstado(-1);
+            numElementos--;
+            return true;
+        }
+        return false;
     }
+
 
     /**
      * Obtiene el valor asociado a una clave en la tabla Hash
@@ -84,7 +118,18 @@ public class Hash <Valor> {
      * @return El valor asociado a la clave, o null si la clave no está en la tabla Hash
      */
     public Valor get(int clave){
-        return null;
+
+        int h = hash1(clave);
+        if (contenedor[h] == null){
+            return null;
+        }else if (contenedor[h].getClave() == clave && contenedor[h].getEstado() == 1){
+            return contenedor[h].getValor();
+        }else {
+            int h2 = hash2(clave);
+            /**
+             *
+             */
+        }
     }
 
     /**
@@ -92,7 +137,7 @@ public class Hash <Valor> {
      * @return true si la tabla hash está vacía, false en caso contrario
      */
     public boolean esVacia(){
-        return true;
+        return numElementos == 0;
     }
 
     /**
@@ -109,7 +154,7 @@ public class Hash <Valor> {
      * @return  valor anterior del factor de carga Max
      */
     public float setAlfaMax(float alfaMax){
-        return 0;
+        this.alfaMax = alfaMax;
     }
 
     /**
@@ -117,7 +162,7 @@ public class Hash <Valor> {
      * @return  número de elementos en la tabla Hash
      */
     public int getNumElementos(){
-        return 0;
+        return numElementos;
     }
 
     /**
@@ -132,8 +177,8 @@ public class Hash <Valor> {
      * Determina si hay colision en X celda
      * @return devuelve true si hay colision, false si no lo hay
      */
-    private boolean hayColision(){
-        return true;
+    private boolean hayColision(int index){
+        return (contenedor[index].getEstado() == 1 && contenedor[index].getClave() != clave);
     }
 
     private int funcionHash(){
@@ -146,36 +191,40 @@ public class Hash <Valor> {
      * @return índice de la celda de la tabla de hash.
      */
     private int hash1(int clave){
-        return 0;
+        return clave % capacidad;
     }
 
     /**
      * Funcion Hash secundaria en caso de colision
+     * El resultado de la operación de módulo es el residuo de la división de la clave por N-1, y luego se suma 1 al resultado.
      * @param clave la clave para la que se va a calcular el índice.
      * @param colisiones el número de colisiones que ha habido en la celda.
      * @return índice de la celda de la tabla de hash.
      */
     private int hash2(int clave, int colisiones){
-        return 0;
+        return (clave % (N - 1)) + 1;
     }
 
     /**
      * Cambia el tamaño de la tabla de Hash
      */
     private void redimensionar(){
-        int capacidad2 = capacidad * 2;
-        cp = siguientePrimo(capacidad2);
-        Celda<Valor>[] tabla2 = new Celda[cp];
-
-        //insertamos elementos en la nueva tabla
-        for (int i = 0; i < capacidad; i++) {
-            if()
-            tabla[i] = new Celda();
+        int capacidad2 = siguientePrimo(capacidad*2);
+        Celda<Valor> contenedor2 = new Celda[capacidad2];
+        for (int i = 0; i<capacidad2; i++){
+            if(contenedor[i] != null && contenedor[i].getEstado() == 1){    //reubicamos en nueva tabla
+               int h;   //nueva posicion
+               int j = 0;   //colisiones
+                do {
+                    h = (hash1(contenedor[i].getClave()) + j * hash2(contenedor[i].getClave, j)) % capacidad2;
+                    j++;
+                } while (capacidad2[h] != null);
+                contenedor[h] = contenedor2[i]; //encontramos h(posicion vacia) en contenedor2 y asignamos la celda original
+            }
         }
-
-        capacidad = cp;
-        numElementos = 0;
-
+        //actualizamos variables
+        contenedor = contenedor2;
+        capacidad = capacidad2
     }
 
     /**
@@ -211,7 +260,20 @@ public class Hash <Valor> {
      *
      * @return una representación de cadena de la tabla de hash.
      */
-    public String toString(){
-        return "";
-    }
+    public String toString(){   //la he visto en stack (hay que echarle un ojo)
+       /* @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < tabla.length; i++) {
+                sb.append(i).append(": ");
+                Celda<V> celda = tabla[i];
+                if (celda.getEstado() == 1) {
+                    sb.append(celda.getValor());
+                } else {
+                    sb.append("-");
+                }
+                sb.append("\n");
+            }
+            return sb.toString();
+        }    }*/
 }

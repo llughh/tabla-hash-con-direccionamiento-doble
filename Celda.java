@@ -7,10 +7,8 @@
  - Fecha ultima de modificación: 31/3/2023
  - Version: 1
 */
-//    H(clave, colisiones) = H1 (clave) + H2 (clave, colisiones)
-//    H1 (clave) = clave mod N
-//    H2 (clave, colisiones) = colisiones * (7 – (clave mod 7))
-public class Celda <Valor> {
+
+public class Celda<Valor> {
 
     /**
      * clave asociada a la celda
@@ -29,7 +27,7 @@ public class Celda <Valor> {
 
     public Celda(){
         this.estado = 0;
-        this.clave = null;
+        this.clave = 0;
         this.valor = null;
     }
 
@@ -40,7 +38,7 @@ public class Celda <Valor> {
      */
     public Celda(int clave, Valor v){
         this.clave = clave;
-        this.valor = valor;
+        this.valor = v;
     }
 
     /**
@@ -52,6 +50,7 @@ public class Celda <Valor> {
         if(estado == 1 || estado == -1 || estado == 0) {
             this.estado = estado;
         }
+        return false;
     }
 
     /**
@@ -67,7 +66,7 @@ public class Celda <Valor> {
      * @param v el valor que se va a asociar con la clave
      */
     public void setValor(Valor v){
-        this.valor = valor;
+        this.valor = v;
     }
 
     /**
@@ -100,9 +99,9 @@ public class Celda <Valor> {
      *
      */
     public boolean equals(Object object){
-        if (object instanceof Celda<?>){
+        if (object instanceof Celda){
             Celda celda = (Celda) object;
-            return this.clave == celda.clave && this.valor = celda.valor;
+            return this.clave == celda.clave && this.valor == celda.valor;
         }
         return false;
     }
