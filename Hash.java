@@ -51,7 +51,7 @@ public class Hash<Valor> {
     public void insertar(int clave, Valor v) {
         int h = hash1(clave); //calcula la posicion inicial de la celda
 
-        if (factorCarga() < alfaMax) {
+        if (factorCarga() <= alfaMax) {
             if (contenedor[h] == null) {
                 contenedor[h] = new Celda<Valor>();
             }
