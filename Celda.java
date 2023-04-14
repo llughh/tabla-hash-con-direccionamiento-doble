@@ -7,40 +7,55 @@
  - Fecha ultima de modificación: 31/3/2023
  - Version: 1
 */
-public class Celda <Valor> {
-//    H(clave, colisiones) = H1 (clave) + H2 (clave, colisiones)
-//    H1 (clave) = clave mod N
-//    H2 (clave, colisiones) = colisiones * (7 – (clave mod 7))
+
+public class Celda<Valor> {
 
     private int clave;
-
     Valor valor;
-
     private int estado;
 
-    public static void main(String[] args) {
-    }
     public Celda(){
+        this.estado = 0;
+        this.clave = 0;
+        this.valor = null;
     }
     public Celda(int clave, Valor v){
+        this.clave = clave;
+        this.valor = v;
     }
-    public boolean setEstado(int valorEstado){
-        return true;
+    public boolean setEstado(int estado){
+        if(estado == 1 || estado == -1 || estado == 0) {
+            this.estado = estado;
+        }
+        return false;
     }
-    public void setClave(int valorClave){
+    public void setClave(int clave){
+        this.clave = clave;
     }
-    public void setValor(){
+
+    public void setValor(Valor v){
+        this.valor = v;
     }
+
     public int getEstado(){
-        return 0;
+        return estado;
     }
+
     public int getClave(){
-        return 0;
+        return clave;
     }
-    public void getValor(){
+
+    public Valor getValor(){
+        return valor;
     }
-    public boolean equals(){
-        return true;
+
+    public boolean equals(Object object){
+
+        if (object instanceof Celda){
+            Celda celda = (Celda) object;
+            return this.clave == celda.clave && this.valor == celda.valor;
+        }
+        return false;
     }
 }
 
