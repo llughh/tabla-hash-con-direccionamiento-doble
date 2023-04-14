@@ -82,16 +82,11 @@ public class Hash<Valor> {
 
     public Valor get(int clave) {
         int h = hash1(clave);
-        if (contenedor[h] == null) {
+        if (contenedor[h].getClave() == clave && contenedor[h].getEstado() == 1) {
+            return  contenedor[h].getValor();
+        }else {
             return null;
-        } else if (contenedor[h].getClave() == clave && contenedor[h].getEstado() == 1) {
-            return contenedor[h].getValor();
-        } else {
-            /**
-             *
-             */
         }
-        return null;
     }
 
     public boolean esVacia() {
