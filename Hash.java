@@ -114,7 +114,8 @@ public class Hash<Valor> {
     }
 
     private int funcionHash(int clave, int colisiones) {
-        return hash1(clave) + hash2(clave, colisiones);
+        int resultadoHash = hash1(clave) + hash2(clave, colisiones);
+        return (resultadoHash % numElementos);
     }
 
     private int hash1(int clave) {
