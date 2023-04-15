@@ -16,61 +16,66 @@ public class Hash<Valor> {
     private int capacidad;
 
     public Hash() {
-        capacidad = 7;
-        contenedor = new Celda[capacidad];
+        this.capacidad = 7;
+        this.contenedor = new Celda[capacidad];
         for (int i = 0; i < capacidad; i++) {
-            contenedor[i] = new Celda<Valor>();
+            this.contenedor[i] = new Celda<Valor>();
         }
-        alfaMax = 0.8f;
-        numElementos = 0;
+        this.alfaMax = 0.8f;
+        this.numElementos = 0;
 
     }
 
     public Hash(int capacidad) {
         this.capacidad = capacidad;
-        contenedor = new Celda[capacidad];
+        this.contenedor = new Celda[capacidad];
         for (int i = 0; i < capacidad; i++) {
-            contenedor[i] = new Celda<Valor>();
+            this.contenedor[i] = new Celda<Valor>();
         }
 
-        alfaMax = 0.8f;
-        numElementos = 0;
+        this.alfaMax = 0.8f;
+        this.numElementos = 0;
 
     }
 
     public Hash(int capacidad, float alfaMax) {
         this.capacidad = capacidad;
         this.alfaMax = (alfaMax < 1.0f && alfaMax > 0.0) ? alfaMax : 0.8f;
-        numElementos = 0;
-        contenedor = new Celda[capacidad];
+        this.numElementos = 0;
+        this.contenedor = new Celda[capacidad];
         for (int i = 0; i < capacidad; i++) {
-            contenedor[i] = new Celda<Valor>();
+            this.contenedor[i] = new Celda<Valor>();
         }
     }
 
     public void insertar(int clave, Valor v) {
-        int h = hash1(clave); //calcula la posicion inicial de la celda
-
+        int colisiones = 0;
+        int h2 = funcionHash(clave, colisiones);
         if (factorCarga() <= alfaMax) {
-            if (contenedor[h] == null) {
-                contenedor[h] = new Celda<Valor>();
+            while (hayColision(funcionHash(clave, colisiones))){
+                colisiones++;
+                h2 = funcionHash(clave, colisiones);
             }
-            contenedor[h].setEstado(1);
-            contenedor[h].setClave(clave);
-            contenedor[h].setValor(v);
+            if (contenedor[h2] == null) {
+                contenedor[h2] = new Celda<Valor>();
+            }
+            contenedor[h2].setEstado(1);
+            contenedor[h2].setClave(clave);
+            contenedor[h2].setValor(v);
         }else {
             redimensionar();
         }
-
+        numElementos++;
     }
 
     public boolean borrar(int clave) {
-        int i = 0;
-        int h;
-        do {
-            h = (hash1(clave) + i * hash2(clave, i)) % capacidad;
-            i++;
-        } while (contenedor[h] != null && (contenedor[h].getEstado() == 0 || contenedor[h].getClave() != clave) && i < capacidad);
+        int colisiones = 0;
+        int maxColisiones = 15;
+        int h = funcionHash(clave, colisiones);
+        while (hayColision(h) && contenedor[h].getClave() != clave && colisiones <= maxColisiones){
+            colisiones++;
+            h = funcionHash(clave, colisiones);
+        }
 
         if (contenedor[h] != null && contenedor[h].getClave() == clave && contenedor[h].getEstado() == 1) {
             contenedor[h].setEstado(-1);
@@ -81,7 +86,13 @@ public class Hash<Valor> {
     }
 
     public Valor get(int clave) {
-        int h = hash1(clave);
+        int colisiones = 0;
+        int maxColisiones = 15;
+        int h = funcionHash(clave, colisiones);
+        while (hayColision(h) && contenedor[h].getClave() != clave && colisiones <= maxColisiones){
+            colisiones++;
+            h = funcionHash(clave, colisiones);
+        }
         if (contenedor[h].getClave() == clave && contenedor[h].getEstado() == 1) {
             return  contenedor[h].getValor();
         }else {
@@ -98,7 +109,7 @@ public class Hash<Valor> {
     }
 
     public void setAlfaMax(float alfaMax) {
-        this.alfaMax = alfaMax;
+        this.alfaMax = (alfaMax > 0.0f && alfaMax <= 1.0f) ? alfaMax : 0.8f;
     }
 
     public int getNumElementos() {
@@ -106,16 +117,20 @@ public class Hash<Valor> {
     }
 
     public float factorCarga() {
-        return (float) numElementos / capacidad;
+        return numElementos / capacidad;
     }
 
     private boolean hayColision(int index) {
-        return (contenedor[index].getEstado() == 1 || contenedor[index].getEstado() == -1 && contenedor[index].getValor() != null);
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        boolean resultado = (stackTrace[2].getClassName() == "insertar")
+                ? (contenedor[index].getEstado() == 1 && contenedor[index].getValor() != null)
+                : ((contenedor[index].getEstado() == 1 && contenedor[index].getValor() != null) || contenedor[index].getEstado() == -1);
+        return resultado;
     }
 
     private int funcionHash(int clave, int colisiones) {
         int resultadoHash = hash1(clave) + hash2(clave, colisiones);
-        return (resultadoHash % numElementos);
+        return (resultadoHash % capacidad);
     }
 
     private int hash1(int clave) {
@@ -166,21 +181,17 @@ public class Hash<Valor> {
     }
 
     public String toString() {   //la he visto en stack (hay que echarle un ojo)
-       /* @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < tabla.length; i++) {
-                sb.append(i).append(": ");
-                Celda<V> celda = tabla[i];
-                if (celda.getEstado() == 1) {
-                    sb.append(celda.getValor());
-                } else {
-                    sb.append("-");
-                }
-                sb.append("\n");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < contenedor.length; i++) {
+            sb.append(i).append(" -> ");
+            Celda<Valor> celda = contenedor[i];
+            if (celda.getEstado() == 1) {
+                sb.append(celda.getValor());
+            } else {
+                sb.append("-");
             }
-            return sb.toString();
-        }    }*/
-        return "";
-    }//
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }
