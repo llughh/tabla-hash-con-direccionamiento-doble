@@ -8,6 +8,9 @@
  - Version: 1
 */
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Hash<Valor> {
 
     private Celda<Valor>[] contenedor;
@@ -40,7 +43,7 @@ public class Hash<Valor> {
 
     public Hash(int capacidad, float alfaMax) {
         this.capacidad = capacidad;
-        this.alfaMax = (alfaMax < 1.0f && alfaMax > 0.0) ? alfaMax : 0.8f;
+        this.alfaMax = (alfaMax < 1.0f && alfaMax > 0.0f) ? alfaMax : 0.8f;
         this.numElementos = 0;
         this.contenedor = new Celda[capacidad];
         for (int i = 0; i < capacidad; i++) {
@@ -64,6 +67,7 @@ public class Hash<Valor> {
             contenedor[h2].setValor(v);
         }else {
             redimensionar();
+            insertar(clave, v);
         }
         numElementos++;
     }
@@ -93,7 +97,7 @@ public class Hash<Valor> {
             colisiones++;
             h = funcionHash(clave, colisiones);
         }
-        if (contenedor[h].getClave() == clave && contenedor[h].getEstado() == 1) {
+        if (contenedor[h] != null && contenedor[h].getClave() == clave && contenedor[h].getEstado() == 1) {
             return  contenedor[h].getValor();
         }else {
             return null;
@@ -117,7 +121,7 @@ public class Hash<Valor> {
     }
 
     public float factorCarga() {
-        return numElementos / capacidad;
+        return (float)(numElementos+1) / (float)capacidad;
     }
 
     private boolean hayColision(int index) {
@@ -142,22 +146,27 @@ public class Hash<Valor> {
     }
 
     private void redimensionar() {
-        int capacidad2 = siguientePrimo(capacidad * 2);
-        Celda[] contenedor2 = new Celda[capacidad2];
-        for (int i = 0; i < capacidad2; i++) {
-            if (contenedor[i] != null && contenedor[i].getEstado() == 1) {    //reubicamos en nueva tabla
-                int h;   //nueva posicion
-                int j = 0;   //colisiones
-                do {
-                    h = (hash1(contenedor[i].getClave()) + j * hash2(contenedor[i].getClave(), j)) % capacidad2;
-                    j++;
-                } while (contenedor2[h] != null);
-                contenedor[h] = contenedor2[i]; //encontramos h(posicion vacia) en contenedor2 y asignamos la celda original
+        int nuevaCapacidad = siguientePrimo(capacidad * 2);
+        int viejaCapacidad  = capacidad;
+        Celda<Valor>[] nuevoContenedor = new Celda[nuevaCapacidad];
+        Celda<Valor>[] viejoContenedor = new Celda[nuevaCapacidad];
+
+        viejoContenedor = contenedor;
+        contenedor = nuevoContenedor;
+        capacidad = nuevaCapacidad;
+        for (int i = 0; i < capacidad; i++) {
+            this.contenedor[i] = new Celda<Valor>();
+        }
+
+        // Copiar elementos del antiguo contenedor al nuevo contenedor
+        for (int i = 0; i < viejaCapacidad; i++) {
+            if (viejoContenedor[i].getEstado() == 1) {
+                int clave = viejoContenedor[i].getClave();
+                Valor valor = viejoContenedor[i].getValor();
+                insertar(clave, valor);
             }
         }
-        //actualizamos variables
-        contenedor = contenedor2;
-        capacidad = capacidad2;
+
     }
 
     private boolean esPrimo(int n) {
@@ -180,18 +189,27 @@ public class Hash<Valor> {
         return siguiente;
     }
 
-    public String toString() {   //la he visto en stack (hay que echarle un ojo)
+    @Override
+    public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < contenedor.length; i++) {
-            sb.append(i).append(" -> ");
-            Celda<Valor> celda = contenedor[i];
-            if (celda.getEstado() == 1) {
-                sb.append(celda.getValor());
-            } else {
-                sb.append("-");
+        sb.append("\n");
+
+        for (int i = 0; i < capacidad; i++) {
+            Celda<Valor> celdaActual = contenedor[i];
+            if (celdaActual != null && celdaActual.getEstado() == 1) {
+                sb.append(celdaActual.getClave()).append(" -> ").append(celdaActual.getValor());
+                sb.append("\n");
+
             }
-            sb.append("\n");
         }
+
+        // Eliminar la última coma y espacio si hay elementos en la tabla
+        if (sb.length() > 1) {
+            sb.setLength(sb.length() - 2);
+        }
+
+        sb.append("\n");
         return sb.toString();
     }
 }
+
