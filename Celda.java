@@ -10,19 +10,8 @@
 
 public class Celda<Valor> {
 
-    /**
-     * clave asociada a la celda
-     */
     private int clave;
-
-    /**
-     * Objeto que representa el valor de la celda
-     */
     Valor valor;
-
-    /**
-     * Sirve para indicar si la celda esta ocupada o no
-     */
     private int estado;
 
     public Celda(){
@@ -30,75 +19,38 @@ public class Celda<Valor> {
         this.clave = 0;
         this.valor = null;
     }
-
-    /**
-     * Constructor de celda con un clave-valor
-     * @param clave la clave que se asociara con la celda
-     * @param v El valor que se asocia con la clave
-     */
     public Celda(int clave, Valor v){
         this.clave = clave;
         this.valor = v;
     }
-
-    /**
-     * Para establecer el estado de celda
-     * @param valorEstado Estado a establecer
-     * @return true si se puede establecer el estado, false si no
-     */
     public boolean setEstado(int estado){
         if(estado == 1 || estado == -1 || estado == 0) {
             this.estado = estado;
         }
         return false;
     }
-
-    /**
-     * Método para establecer la clave asociada con la celda
-     * @param valorClave la clave que se va a asociar con la celda
-     */
     public void setClave(int clave){
         this.clave = clave;
     }
 
-    /**
-     * Método para establecer el valor asociado con la clave en la celda
-     * @param v el valor que se va a asociar con la clave
-     */
     public void setValor(Valor v){
         this.valor = v;
     }
 
-    /**
-     * Método para obtener el estado de la celda
-     * @return estado actual de la celda
-     */
     public int getEstado(){
         return estado;
     }
 
-    /**
-     * Método para obtener la clave asociada con la celda
-     * @return clave asociada con la celda
-     */
     public int getClave(){
         return clave;
     }
 
-    /**
-     * Método para obtener el valor asociado con la clave en la celda.
-     * @return el valor actual asociado con la clave en la celda.
-     */
     public Valor getValor(){
         return valor;
     }
 
-    /**
-     * Método que verifica si dos celdas son iguales.
-     * Si NO es una instancia de "Celda" devuelve false
-     *
-     */
     public boolean equals(Object object){
+
         if (object instanceof Celda){
             Celda celda = (Celda) object;
             return this.clave == celda.clave && this.valor == celda.valor;
