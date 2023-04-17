@@ -1,4 +1,3 @@
-package practica1tpa.act;/*
 /*
  - Practica: Implementacion de una tabla Hash
  - Grupo de TPA: P1-M21 7
@@ -119,3 +118,4 @@ public class Pruebas {
         System.out.println("-------------------------");
     }
 }
+
