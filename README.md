@@ -7,6 +7,7 @@ La clase Hash representará la propia tabla. Utilizará direccionamiento abierto
 En cada posición de la tabla se almacenará un objeto de la clase Celda. 
 
 Cada celda (ver figura 1) almacena la clave y el valor del elemento, además del estado de esa posición (borrado = -1, vacío = 0, ocupado = 1)
+
 ![image](https://user-images.githubusercontent.com/88946644/232522759-f271ecfd-7654-45f7-9525-318a1dca9085.png)
 
 Tanto la capacidad de la tabla como el umbral máximo del factor de carga son datos configurables. De no especificarse, se tomarán por defecto N=7 y el 80% como el
