@@ -123,6 +123,7 @@ public class Hash<Valor> {
             numElementos--;
             return true;
         }
+
         return false;
     }
 
@@ -251,6 +252,8 @@ public class Hash<Valor> {
                 int clave = viejoContenedor[i].getClave();
                 Valor valor = viejoContenedor[i].getValor();
                 insertar(clave, valor);
+                numElementos--;
+
             }
         }
 
